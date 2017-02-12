@@ -1,0 +1,149 @@
+---
+title: "How to use the FARS Functions"
+author: "Muhammad Anwar Sabri"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{How to use the FARS Functions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Introduction
+This vignette shows how to use various functions incorporated into the `BuildRPackagesCoursera` package by explaining their internal workings as well as providing some examples of using them.
+
+This package provides the following five(**5**) FARS (Fatality Analysis Reporting System) functions:
+
+1. **fars_read(`filename`)** : reads data from a csv (Comma Separated Value) file.
+    This functions reads a flat file (text file encoded in ASCII) in the current
+    working directory and returns it as an object of the "tbl_df" class. If
+    the file does not exist in the current directory, this function stops
+    execution with an error message. The progress while the file is being
+    read is not displayed. Similarly, messages are also suppressed.
+    It is an internal (supporting) function used by other functions in this
+    package.  
+    The file to be read, passed as a character string parameter (`filename`),
+    must exist in the current working directory. CSV file can also be
+    compressed as allowed by the `readr` package's `read_csv()` function. If the file 
+    does not exist in the current working directory, this function stops 
+    execution with an error message: "file `<filename>` does not exist".  
+    It returns an object of class "**tbl_df**" (table dataframe) from the `dplyr` package.
+    This function imports the following functions:
+    - `read_csv()` from the `readr` package, and
+    - `tbl_df()` from the `dply` package.
+
+##### Examples:  
+
+```{r}
+library(BuildingRPackagesCoursera)
+BuildingRPackagesCoursera:::fars_read("accident_2014.csv.bz2") # file exists in current working directory
+```
+
+The function call `BuildingRPackagesCoursera:::fars_read('abc123xyz.csv')` will produce the Error:  
+**File 'abc123xyz.csv' does not exist.**
+
+***
+
+2. **make_filename(`year`)** : generates the filename of the csv file to be read.
+    This function uses the year, input parameter, to generate the file
+    name for the FARS data file. It converts the year into an integer
+    and then uses the sprintf() function to format the filename by
+    prefixing "accident_" to the year and siffixing ".csv.bz2".  
+    No other input validation is performed. It requires no other packages
+    to be imported.  
+    Its parameter `year` must be an integer, or a value coercible to an integer. If not coercible, 
+    then an invalid filename will be generated containing "NA" as the year in the file name --
+    accident_NA.csv.bz2 -- which would, in all likelihood, not exist in the FARS database.  
+    It returns a character string representing the filename.  
+    
+##### Examples:  
+
+```{r}
+BuildingRPackagesCoursera:::make_filename(2014)
+BuildingRPackagesCoursera:::make_filename("2016")
+BuildingRPackagesCoursera:::make_filename(2016.5)
+BuildingRPackagesCoursera:::make_filename("2016.5")
+BuildingRPackagesCoursera:::make_filename("DEC-2016")
+```
+
+***
+
+3. **fars_read_years(`years`)** : reads FARS Data for Multiple Years.  
+    This function takes a vector of years as its only parameter, reads the FARS
+    files for those years and returns the MONTH and year columns as a list.
+    This function processes each element of a vector or list of years as follows:  
+    - calls the supporting function  `make_filename()`  to generate a filename with the year,
+    - calls the supporting function,  `fars_read()`  to read the FARS data file with the generated filename,
+    - if the file exists, creates a new column, year, selects the MONTH and year columns, and adds them to an R list.
+    - If the file does not exit, gives a warning message, and adds nothing (NULL) to the list.
+    - Finally, it returns the R list to the calling function.  
+    
+    This function imports the following functions from the `dplyr` package:
+    - `mutate()` and `select()`  
+    
+##### Examples:  
+
+```{r}
+library(dplyr)
+BuildingRPackagesCoursera:::fars_read_years(c(2013, 2014, 2015))
+# BuildingRPackagesCoursera:::fars_read_years(2013:2015) #same as above
+# BuildingRPackagesCoursera:::fars_read_years(list(2013, 2014, 2015)) #same as above
+BuildingRPackagesCoursera:::fars_read_years(2013:2016)
+```
+
+***
+
+4. **fars_summarize_years(`years`)** : summarizes FARS data for multiple years into columns.  
+    This function produces a "tidy" data frame of FARS data for multiple years. Data is summarized by each month of each year with each year in its own column.  
+    This function processes each element of a vector or list of years as follows:
+    - calls the supporting function, \code{fars_read_years()}, to generate a list of MONTH and year,
+    - calls the `bind_rows()` function from the `dplyr` package to merge the list elements (MONTH and year) into a single dataframe,
+    - calls the `group_by()` function from the `dplyr` package on the dataframe to group them by year and MONTH,
+    - calls the `summarize()` function from the `dplyr` package on the grouped data to count the number of occurrences of fatalities for each month within each year, and finally
+    - calls the `spread()` function from the `tidyr` package on the summarized data to create a column for each year.
+    - Returns the tidy dataframe comprising of years (provided as the input parameter) as columns with the fatalities summarized by each month.  
+
+    This function imports the following functions from other packages:
+    - `bind_rows()`, group_by() and `summarize()` from the  `dplyr` package, and  
+    - `spread()` from the `tidyr` package.  
+    
+#### Please note that NO error handling is performed in this function.
+
+##### Examples:  
+
+```{r}
+library(dplyr)
+library(tidyr)
+BuildingRPackagesCoursera::fars_summarize_years(c(2013, 2014, 2015))
+# BuildingRPackagesCoursera::fars_summarize_years(2013:2015) #same as above
+# BuildingRPackagesCoursera::fars_summarize_years(list(2013, 2014, 2015)) #same as above
+```
+
+***
+  
+5. **fars_map_state(`state.num`, `year`)** : plots a map of fatalities in a State for a year.  
+    This function creates a map of fatalities in a US State during a year as reported in the FARS database.  
+    It takes the state number (as coded in the `maps` package) and a year as inputs and performs the following operations on them:
+    - calls the supporting function, `make_filename()`, with the year, to generate a list of MONTH and year,
+    - calls the supporting function, `fars_read()`, to read the FARS data file with the generated filename,
+    - If the state number (provided as the input parameter) is NOT found in the FARS data file read, stops the execution with a message, "invalid STATE number: xxx".
+    - For a valid STATE number:
+        - calls the \code{filter()} function from the `dplyr` package to extract the data for the STATE number provided,
+        - If no data exists for the state number, prints the message, "no accidents to plot" and returns NULL.
+        - Otherwise:
+            - sets the invalid data for longitude (values greater than 900) and latitude (values greater than 90), if any, to NA, and
+            - with the cleaned, mappable data:
+                - calls the `map()` function of the `maps` package to draw the map of the State, and
+                - calls the `points()` function of the base `graphics` package to draw points on the longitude, latitude coordinates as documented in the FARS dataset for that year in that State.  
+
+    This function imports the following functions from other packages:  
+    - `filter()` from the  `dplyr` package, and  
+    - `map()` from the `maps` package.  
+
+##### Examples:  
+
+```{r}
+library(maps)
+# Fatalities map for State #1 (Alabama) during the year 2014
+BuildingRPackagesCoursera::fars_map_state(1, 2014)
+```

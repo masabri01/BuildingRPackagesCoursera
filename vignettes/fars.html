@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Muhammad Anwar Sabri" />
+
+<meta name="date" content="2017-02-11" />
+
+<title>How to use the FARS Functions</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">How to use the FARS Functions</h1>
+<h4 class="author"><em>Muhammad Anwar Sabri</em></h4>
+<h4 class="date"><em>2017-02-11</em></h4>
+
+
+
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>This vignette shows how to use various functions incorporated into the <code>BuildRPackagesCoursera</code> package by explaining their internal workings as well as providing some examples of using them.</p>
+<p>This package provides the following five(<strong>5</strong>) FARS (Fatality Analysis Reporting System) functions:</p>
+<ol style="list-style-type: decimal">
+<li><strong>fars_read(<code>filename</code>)</strong> : reads data from a csv (Comma Separated Value) file. This functions reads a flat file (text file encoded in ASCII) in the current working directory and returns it as an object of the “tbl_df” class. If the file does not exist in the current directory, this function stops execution with an error message. The progress while the file is being read is not displayed. Similarly, messages are also suppressed. It is an internal (supporting) function used by other functions in this package.<br />
+The file to be read, passed as a character string parameter (<code>filename</code>), must exist in the current working directory. CSV file can also be compressed as allowed by the <code>readr</code> package’s <code>read_csv()</code> function. If the file does not exist in the current working directory, this function stops execution with an error message: “file <code>&lt;filename&gt;</code> does not exist”.<br />
+It returns an object of class “<strong>tbl_df</strong>” (table dataframe) from the <code>dplyr</code> package. This function imports the following functions:
+<ul>
+<li><code>read_csv()</code> from the <code>readr</code> package, and</li>
+<li><code>tbl_df()</code> from the <code>dply</code> package.</li>
+</ul></li>
+</ol>
+<div id="examples" class="section level5">
+<h5>Examples:</h5>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(BuildingRPackagesCoursera)
+BuildingRPackagesCoursera:::<span class="kw">fars_read</span>(<span class="st">&quot;accident_2014.csv.bz2&quot;</span>) <span class="co"># file exists in current working directory</span></code></pre></div>
+<pre><code>## # A tibble: 30,056 x 50
+##    STATE ST_CASE VE_TOTAL VE_FORMS PVH_INVL  PEDS PERNOTMVIT PERMVIT
+##    &lt;int&gt;   &lt;int&gt;    &lt;int&gt;    &lt;int&gt;    &lt;int&gt; &lt;int&gt;      &lt;int&gt;   &lt;int&gt;
+## 1      1   10001        1        1        0     0          0       2
+## 2      1   10002        1        1        0     0          0       1
+## 3      1   10003        2        2        0     0          0       7
+## 4      1   10004        3        3        0     0          0       5
+## 5      1   10005        1        1        0     0          0       1
+## 6      1   10006        1        1        0     0          0       1
+## 7      1   10007        3        2        1     0          0       2
+## 8      1   10008        2        2        0     0          0       4
+## 9      1   10009        3        3        0     0          0       5
+## 10     1   10010        2        2        0     0          0       6
+## # ... with 30,046 more rows, and 42 more variables: PERSONS &lt;int&gt;,
+## #   COUNTY &lt;int&gt;, CITY &lt;int&gt;, DAY &lt;int&gt;, MONTH &lt;int&gt;, YEAR &lt;int&gt;,
+## #   DAY_WEEK &lt;int&gt;, HOUR &lt;int&gt;, MINUTE &lt;int&gt;, NHS &lt;int&gt;, ROAD_FNC &lt;int&gt;,
+## #   ROUTE &lt;int&gt;, TWAY_ID &lt;chr&gt;, TWAY_ID2 &lt;chr&gt;, MILEPT &lt;int&gt;,
+## #   LATITUDE &lt;dbl&gt;, LONGITUD &lt;dbl&gt;, SP_JUR &lt;int&gt;, HARM_EV &lt;int&gt;,
+## #   MAN_COLL &lt;int&gt;, RELJCT1 &lt;int&gt;, RELJCT2 &lt;int&gt;, TYP_INT &lt;int&gt;,
+## #   WRK_ZONE &lt;int&gt;, REL_ROAD &lt;int&gt;, LGT_COND &lt;int&gt;, WEATHER1 &lt;int&gt;,
+## #   WEATHER2 &lt;int&gt;, WEATHER &lt;int&gt;, SCH_BUS &lt;int&gt;, RAIL &lt;chr&gt;,
+## #   NOT_HOUR &lt;int&gt;, NOT_MIN &lt;int&gt;, ARR_HOUR &lt;int&gt;, ARR_MIN &lt;int&gt;,
+## #   HOSP_HR &lt;int&gt;, HOSP_MN &lt;int&gt;, CF1 &lt;int&gt;, CF2 &lt;int&gt;, CF3 &lt;int&gt;,
+## #   FATALS &lt;int&gt;, DRUNK_DR &lt;int&gt;</code></pre>
+<p>The function call <code>BuildingRPackagesCoursera:::fars_read('abc123xyz.csv')</code> will produce the Error:<br />
+<strong>File ‘abc123xyz.csv’ does not exist.</strong></p>
+<hr />
+<ol start="2" style="list-style-type: decimal">
+<li><strong>make_filename(<code>year</code>)</strong> : generates the filename of the csv file to be read. This function uses the year, input parameter, to generate the file name for the FARS data file. It converts the year into an integer and then uses the sprintf() function to format the filename by prefixing “accident_” to the year and siffixing “.csv.bz2”.<br />
+No other input validation is performed. It requires no other packages to be imported.<br />
+Its parameter <code>year</code> must be an integer, or a value coercible to an integer. If not coercible, then an invalid filename will be generated containing “NA” as the year in the file name – accident_NA.csv.bz2 – which would, in all likelihood, not exist in the FARS database.<br />
+It returns a character string representing the filename.</li>
+</ol>
+</div>
+<div id="examples-1" class="section level5">
+<h5>Examples:</h5>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BuildingRPackagesCoursera:::<span class="kw">make_filename</span>(<span class="dv">2014</span>)</code></pre></div>
+<pre><code>## [1] &quot;accident_2014.csv.bz2&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BuildingRPackagesCoursera:::<span class="kw">make_filename</span>(<span class="st">&quot;2016&quot;</span>)</code></pre></div>
+<pre><code>## [1] &quot;accident_2016.csv.bz2&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BuildingRPackagesCoursera:::<span class="kw">make_filename</span>(<span class="fl">2016.5</span>)</code></pre></div>
+<pre><code>## [1] &quot;accident_2016.csv.bz2&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BuildingRPackagesCoursera:::<span class="kw">make_filename</span>(<span class="st">&quot;2016.5&quot;</span>)</code></pre></div>
+<pre><code>## [1] &quot;accident_2016.csv.bz2&quot;</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BuildingRPackagesCoursera:::<span class="kw">make_filename</span>(<span class="st">&quot;DEC-2016&quot;</span>)</code></pre></div>
+<pre><code>## Warning in BuildingRPackagesCoursera:::make_filename(&quot;DEC-2016&quot;): NAs
+## introduced by coercion</code></pre>
+<pre><code>## [1] &quot;accident_NA.csv.bz2&quot;</code></pre>
+<hr />
+<ol start="3" style="list-style-type: decimal">
+<li><strong>fars_read_years(<code>years</code>)</strong> : reads FARS Data for Multiple Years.<br />
+This function takes a vector of years as its only parameter, reads the FARS files for those years and returns the MONTH and year columns as a list. This function processes each element of a vector or list of years as follows:
+<ul>
+<li>calls the supporting function <code>make_filename()</code> to generate a filename with the year,</li>
+<li>calls the supporting function, <code>fars_read()</code> to read the FARS data file with the generated filename,</li>
+<li>if the file exists, creates a new column, year, selects the MONTH and year columns, and adds them to an R list.</li>
+<li>If the file does not exit, gives a warning message, and adds nothing (NULL) to the list.</li>
+<li>Finally, it returns the R list to the calling function.</li>
+</ul>
+This function imports the following functions from the <code>dplyr</code> package:
+<ul>
+<li><code>mutate()</code> and <code>select()</code></li>
+</ul></li>
+</ol>
+</div>
+<div id="examples-2" class="section level5">
+<h5>Examples:</h5>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)</code></pre></div>
+<pre><code>## 
+## Attaching package: 'dplyr'</code></pre>
+<pre><code>## The following objects are masked from 'package:stats':
+## 
+##     filter, lag</code></pre>
+<pre><code>## The following objects are masked from 'package:base':
+## 
+##     intersect, setdiff, setequal, union</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">BuildingRPackagesCoursera:::<span class="kw">fars_read_years</span>(<span class="kw">c</span>(<span class="dv">2013</span>, <span class="dv">2014</span>, <span class="dv">2015</span>))</code></pre></div>
+<pre><code>## [[1]]
+## # A tibble: 30,202 x 2
+##    MONTH  year
+##    &lt;int&gt; &lt;dbl&gt;
+## 1      1  2013
+## 2      1  2013
+## 3      1  2013
+## 4      1  2013
+## 5      1  2013
+## 6      1  2013
+## 7      1  2013
+## 8      1  2013
+## 9      1  2013
+## 10     1  2013
+## # ... with 30,192 more rows
+## 
+## [[2]]
+## # A tibble: 30,056 x 2
+##    MONTH  year
+##    &lt;int&gt; &lt;dbl&gt;
+## 1      1  2014
+## 2      1  2014
+## 3      1  2014
+## 4      1  2014
+## 5      1  2014
+## 6      1  2014
+## 7      1  2014
+## 8      1  2014
+## 9      1  2014
+## 10     1  2014
+## # ... with 30,046 more rows
+## 
+## [[3]]
+## # A tibble: 32,166 x 2
+##    MONTH  year
+##    &lt;int&gt; &lt;dbl&gt;
+## 1      1  2015
+## 2      1  2015
+## 3      1  2015
+## 4      1  2015
+## 5      1  2015
+## 6      1  2015
+## 7      1  2015
+## 8      1  2015
+## 9      1  2015
+## 10     1  2015
+## # ... with 32,156 more rows</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># BuildingRPackagesCoursera:::fars_read_years(2013:2015) #same as above</span>
+<span class="co"># BuildingRPackagesCoursera:::fars_read_years(list(2013, 2014, 2015)) #same as above</span>
+BuildingRPackagesCoursera:::<span class="kw">fars_read_years</span>(<span class="dv">2013</span>:<span class="dv">2016</span>)</code></pre></div>
+<pre><code>## Warning in value[[3L]](cond): invalid year: 2016</code></pre>
+<pre><code>## [[1]]
+## # A tibble: 30,202 x 2
+##    MONTH  year
+##    &lt;int&gt; &lt;int&gt;
+## 1      1  2013
+## 2      1  2013
+## 3      1  2013
+## 4      1  2013
+## 5      1  2013
+## 6      1  2013
+## 7      1  2013
+## 8      1  2013
+## 9      1  2013
+## 10     1  2013
+## # ... with 30,192 more rows
+## 
+## [[2]]
+## # A tibble: 30,056 x 2
+##    MONTH  year
+##    &lt;int&gt; &lt;int&gt;
+## 1      1  2014
+## 2      1  2014
+## 3      1  2014
+## 4      1  2014
+## 5      1  2014
+## 6      1  2014
+## 7      1  2014
+## 8      1  2014
+## 9      1  2014
+## 10     1  2014
+## # ... with 30,046 more rows
+## 
+## [[3]]
+## # A tibble: 32,166 x 2
+##    MONTH  year
+##    &lt;int&gt; &lt;int&gt;
+## 1      1  2015
+## 2      1  2015
+## 3      1  2015
+## 4      1  2015
+## 5      1  2015
+## 6      1  2015
+## 7      1  2015
+## 8      1  2015
+## 9      1  2015
+## 10     1  2015
+## # ... with 32,156 more rows
+## 
+## [[4]]
+## NULL</code></pre>
+<hr />
+<ol start="4" style="list-style-type: decimal">
+<li><strong>fars_summarize_years(<code>years</code>)</strong> : summarizes FARS data for multiple years into columns.<br />
+This function produces a “tidy” data frame of FARS data for multiple years. Data is summarized by each month of each year with each year in its own column.<br />
+This function processes each element of a vector or list of years as follows:
+<ul>
+<li>calls the supporting function, , to generate a list of MONTH and year,</li>
+<li>calls the <code>bind_rows()</code> function from the <code>dplyr</code> package to merge the list elements (MONTH and year) into a single dataframe,</li>
+<li>calls the <code>group_by()</code> function from the <code>dplyr</code> package on the dataframe to group them by year and MONTH,</li>
+<li>calls the <code>summarize()</code> function from the <code>dplyr</code> package on the grouped data to count the number of occurrences of fatalities for each month within each year, and finally</li>
+<li>calls the <code>spread()</code> function from the <code>tidyr</code> package on the summarized data to create a column for each year.</li>
+<li>Returns the tidy dataframe comprising of years (provided as the input parameter) as columns with the fatalities summarized by each month.</li>
+</ul>
+This function imports the following functions from other packages:
+<ul>
+<li><code>bind_rows()</code>, group_by() and <code>summarize()</code> from the <code>dplyr</code> package, and<br />
+</li>
+<li><code>spread()</code> from the <code>tidyr</code> package.</li>
+</ul></li>
+</ol>
+</div>
+<div id="please-note-that-no-error-handling-is-performed-in-this-function." class="section level4">
+<h4>Please note that NO error handling is performed in this function.</h4>
+<div id="examples-3" class="section level5">
+<h5>Examples:</h5>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(dplyr)
+<span class="kw">library</span>(tidyr)
+BuildingRPackagesCoursera::<span class="kw">fars_summarize_years</span>(<span class="kw">c</span>(<span class="dv">2013</span>, <span class="dv">2014</span>, <span class="dv">2015</span>))</code></pre></div>
+<pre><code>## # A tibble: 12 x 4
+##    MONTH  2013  2014  2015
+## *  &lt;int&gt; &lt;int&gt; &lt;int&gt; &lt;int&gt;
+## 1      1  2230  2168  2368
+## 2      2  1952  1893  1968
+## 3      3  2356  2245  2385
+## 4      4  2300  2308  2430
+## 5      5  2532  2596  2847
+## 6      6  2692  2583  2765
+## 7      7  2660  2696  2998
+## 8      8  2899  2800  3016
+## 9      9  2741  2618  2865
+## 10    10  2768  2831  3019
+## 11    11  2615  2714  2724
+## 12    12  2457  2604  2781</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># BuildingRPackagesCoursera::fars_summarize_years(2013:2015) #same as above</span>
+<span class="co"># BuildingRPackagesCoursera::fars_summarize_years(list(2013, 2014, 2015)) #same as above</span></code></pre></div>
+<hr />
+<ol start="5" style="list-style-type: decimal">
+<li><strong>fars_map_state(<code>state.num</code>, <code>year</code>)</strong> : plots a map of fatalities in a State for a year.<br />
+This function creates a map of fatalities in a US State during a year as reported in the FARS database.<br />
+It takes the state number (as coded in the <code>maps</code> package) and a year as inputs and performs the following operations on them:
+<ul>
+<li>calls the supporting function, <code>make_filename()</code>, with the year, to generate a list of MONTH and year,</li>
+<li>calls the supporting function, <code>fars_read()</code>, to read the FARS data file with the generated filename,</li>
+<li>If the state number (provided as the input parameter) is NOT found in the FARS data file read, stops the execution with a message, “invalid STATE number: xxx”.</li>
+<li>For a valid STATE number:
+<ul>
+<li>calls the  function from the <code>dplyr</code> package to extract the data for the STATE number provided,</li>
+<li>If no data exists for the state number, prints the message, “no accidents to plot” and returns NULL.</li>
+<li>Otherwise:
+<ul>
+<li>sets the invalid data for longitude (values greater than 900) and latitude (values greater than 90), if any, to NA, and</li>
+<li>with the cleaned, mappable data:
+<ul>
+<li>calls the <code>map()</code> function of the <code>maps</code> package to draw the map of the State, and</li>
+<li>calls the <code>points()</code> function of the base <code>graphics</code> package to draw points on the longitude, latitude coordinates as documented in the FARS dataset for that year in that State.</li>
+</ul></li>
+</ul></li>
+</ul></li>
+</ul>
+This function imports the following functions from other packages:
+<ul>
+<li><code>filter()</code> from the <code>dplyr</code> package, and<br />
+</li>
+<li><code>map()</code> from the <code>maps</code> package.</li>
+</ul></li>
+</ol>
+</div>
+<div id="examples-4" class="section level5">
+<h5>Examples:</h5>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(maps)
+<span class="co"># Fatalities map for State #1 (Alabama) during the year 2014</span>
+BuildingRPackagesCoursera::<span class="kw">fars_map_state</span>(<span class="dv">1</span>, <span class="dv">2014</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,16 @@
+Package: BuildingRPackagesCoursera
+Type: Package
+Title: Assignment for Coursera Building R Packages
+Version: 0.1.0
+Date: 2017-01-22
+Author: Muhammad Anwar Sabri
+Maintainer: Muhammad Anwar Sabri <muhammadsabri01@gmail.com>
+Description: Package for FARS functions.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 5.0.1
+Suggests: knitr,
+    rmarkdown,
+    testthat
+VignetteBuilder: knitr
