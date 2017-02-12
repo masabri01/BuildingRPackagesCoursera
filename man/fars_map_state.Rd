@@ -53,7 +53,9 @@ Following functions need to be imported:
       "Details" section.
 }
 \examples{
+\dontrun{
 fars_map_state(1, 2014) # Fatalities map for State #1 during 2014
+}
 
 }
 

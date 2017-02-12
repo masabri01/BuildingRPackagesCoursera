@@ -39,9 +39,11 @@ Following functions need to be imported:
       ignores that invalid year by returing a NULL.
 }
 \examples{
+\dontrun{
 fars_read_years(c(2014, 2015, 2016))
 fars_read_years(2014:2016)
 fars_read_years(list(2014, 2015, 2016))
+}
 
 }
 

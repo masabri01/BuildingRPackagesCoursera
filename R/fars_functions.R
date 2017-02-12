@@ -32,8 +32,10 @@
 #'          from the \code{dplyr} package.
 #'
 #' @examples
+#' \dontrun{
 #' fars_read("accident_2014.csv.bz2") # file in current working directory
 #' fars_read("abc123xyz.csv") # Error: File 'abc123xyz.csv' does not exist.
+#' }
 #'
 fars_read <- function(filename) {
         if(!file.exists(filename))
@@ -66,11 +68,13 @@ fars_read <- function(filename) {
 #' @return This function returns a character string representing the filename.
 #'
 #' @examples
+#' \dontrun{
 #' make_filename(2016) # generates "accident_2016.csv.bz2"
 #' make_filename("2016") # generates "accident_2016.csv.bz2"
 #' make_filename(2016.5) # generates "accident_2016.csv.bz2"
 #' make_filename("2016.5") # generates "accident_2016.csv.bz2"
 #' make_filename("DEC-2016") # generates "accident_NA.csv.bz2"
+#' }
 #'
 make_filename <- function(year) {
         year <- as.integer(year)
@@ -108,9 +112,11 @@ make_filename <- function(year) {
 #'         MONTH and year.
 #'
 #' @examples
+#' \dontrun{
 #' fars_read_years(c(2014, 2015, 2016))
 #' fars_read_years(2014:2016)
 #' fars_read_years(list(2014, 2015, 2016))
+#' }
 #'
 fars_read_years <- function(years) {
         lapply(years, function(year) {
@@ -149,6 +155,7 @@ fars_read_years <- function(years) {
 #'
 #' @importFrom dplyr bind_rows group_by summarize
 #' @importFrom tidyr spread
+#' @import magrittr
 #'
 #' @note Following functions need to be imported:
 #'       \code{dplyr} package: \code{bind_rows()}, \code{group_by()}, and
@@ -221,7 +228,9 @@ fars_summarize_years <- function(years) {
 #'         one point for EACH fatality that occurred in that State.
 #'
 #' @examples
+#' \dontrun{
 #' fars_map_state(1, 2014) # Fatalities map for State #1 during 2014
+#' }
 #'
 #' @export
 fars_map_state <- function(state.num, year) {

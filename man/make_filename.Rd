@@ -32,11 +32,13 @@ No other input validation is performed. It requires no other packages
          to be imported.
 }
 \examples{
+\dontrun{
 make_filename(2016) # generates "accident_2016.csv.bz2"
 make_filename("2016") # generates "accident_2016.csv.bz2"
 make_filename(2016.5) # generates "accident_2016.csv.bz2"
 make_filename("2016.5") # generates "accident_2016.csv.bz2"
 make_filename("DEC-2016") # generates "accident_NA.csv.bz2"
+}
 
 }
 

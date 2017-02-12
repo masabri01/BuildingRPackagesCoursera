@@ -40,8 +40,10 @@ The file passed as a parameter (\code{filename}) must exist in the
        with an error message: "file '\code{filename}' does not exist".
 }
 \examples{
+\dontrun{
 fars_read("accident_2014.csv.bz2") # file in current working directory
 fars_read("abc123xyz.csv") # Error: File 'abc123xyz.csv' does not exist.
+}
 
 }
 
