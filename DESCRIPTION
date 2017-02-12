@@ -14,3 +14,4 @@ Suggests: knitr,
     rmarkdown,
     testthat
 VignetteBuilder: knitr
+URL: https://github.com/masabri01/BuildingRPackagesCoursera
