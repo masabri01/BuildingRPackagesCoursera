@@ -170,9 +170,11 @@ fars_read_years <- function(years) {
 #'         each month.
 #'
 #' @examples
+#' \dontrun{
 #' fars_summarize_years(c(2014, 2015, 2016))
 #' fars_summarize_years(c(2014:2016))
 #' fars_summarize_years(list(2014, 2015, 2016))
+#' }
 #'
 #' @export
 fars_summarize_years <- function(years) {

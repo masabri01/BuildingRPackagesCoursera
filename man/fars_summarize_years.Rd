@@ -44,9 +44,11 @@ Following functions need to be imported:
       No error handling is performed in this function.
 }
 \examples{
+\dontrun{
 fars_summarize_years(c(2014, 2015, 2016))
 fars_summarize_years(c(2014:2016))
 fars_summarize_years(list(2014, 2015, 2016))
+}
 
 }
 
